@@ -14,12 +14,69 @@
     $stmt=$dbh->prepare($sql);
     $stmt->execute();
 
-    //1レコード分しか取得しないのでfetchも一回でいい
+ //1レコード分しか取得しないのでfetchも一回でいい
     $area=$stmt->fetch(PDO::FETCH_ASSOC);
+   // var_dump($area);
+   
+
+    //friends テーブルから$area_idを使って友達を選択する
+    $sql='SELECT `friend_id`,`friend_name`,`gender`from `friends` where `area_id`='.$area_id;
+
+
+    $stmt=$dbh->prepare($sql);
+    $stmt->execute();
+
+
+    $friend= array();
+    while (1) {
+      $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+      if($rec==false){
+        break;
+      }
+       $friend[]=$rec;//配列に代入することを忘れない
+
+      // var_dump($friend); //<pre>タグはインデントのテキストが出力される
+
+      }
+
+      $sum_friend=0;
+      $sum_boys=0;
+      $sum_girls=0;
+
+
+
+      //男女の人数をカウント、全体のカウント
+      foreach ($friend as $count)
+       {
+          if ($count['gender']==1) {
+            $sum_boys++;
+          }
+          elseif ($count['gender']==2) {
+            $sum_girls++;
+          }
+          
+       }
+    $sum_friend=$sum_boys+$sum_girls;
+
+    //echo $sum_friend;
+
+    //削除ボタンを押したときのactionの値とidを取得
+    if(!empty($_GET)&&($_GET['action']=='delete'))
+    {
+    //SQL文でDELETEを実行
+    $sql = "DELETE FROM `friends` where `friend_id`=".$_GET['id'];//delete文
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    //index.phpに画面遷移を行う
+   header('Location: index.php');//削除後、bbs.phpに戻る
+
+    
+
+    }
 
     echo '<br>';
     echo '<br>';
-    //var_dump($area);
+    
 
 
 
@@ -76,7 +133,7 @@
     <div class="row">
       <div class="col-md-4 content-margin-top">
       <legend><?php echo $area['area_name']; ?>の友達</legend>
-      <div class="well">男性：2名　女性：1名</div>
+      <div class="well">男性：<?php echo $sum_boys;?>名 女性：<?php echo $sum_girls;?>名</div>
         <table class="table table-striped table-hover table-condensed">
           <thead>
             <tr>
@@ -85,38 +142,25 @@
             </tr>
           </thead>
           <tbody>
+           <?php foreach ($friend as $friend_list): ?>
+            
             <!-- 友達の名前を表示 -->
             <tr>
-              <td><div class="text-center">山田　太郎</div></td>
+              <td><div class="text-center"><?php echo $friend_list['friend_name']; ?></div></td>
               <td>
                 <div class="text-center">
-                  <a href="edit.html"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                  <a href="javascript:void(0);" onclick="destroy();"><i class="fa fa-trash"></i></a>
+                  <a href="edit.php"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <!--href="javascript:void(0);ってなんぞや-->
+                  <!--idを削除ボタンを押したときに値を送信 OK-->
+                  <a href="show.php?id=<?php echo $friend_list['friend_id'];?>&action=delete" onclick="destroy();"><i class="fa fa-trash"></i></a>
                 </div>
               </td>
             </tr>
-            <tr>
-              <td><div class="text-center">小林　花子</div></td>
-              <td>
-                <div class="text-center">
-                  <a href="edit.html"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                  <a href="javascript:void(0);" onclick="destroy();"><i class="fa fa-trash"></i></a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><div class="text-center">佐藤　健</div></td>
-              <td>
-                <div class="text-center">
-                  <a href="edit.html"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                  <a href="javascript:void(0);" onclick="destroy();"><i class="fa fa-trash"></i></a>
-                </div>
-              </td>
-            </tr>
+          <?php endforeach; ?>  
+            
           </tbody>
         </table>
-
-        <input type="button" class="btn btn-default" value="新規作成" onClick="location.href='new.html'">
+        <input type="button" class="btn btn-default" value="新規作成" onClick="location.href='new.php'">
       </div>
     </div>
   </div>

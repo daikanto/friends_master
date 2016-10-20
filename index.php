@@ -27,11 +27,11 @@
         //echo $record['area_name'];
         //echo '<br>';
     }
-    //var_dump($areas);
+   // var_dump($areas);
     echo '<br>';
     echo '<br>';
     echo '<br>';
-    echo count($areas);
+    //echo count($areas);
 
     $dbh=null;
  ?>
