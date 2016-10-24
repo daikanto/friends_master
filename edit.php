@@ -58,7 +58,7 @@
     $stmt->execute();
 
 
-   header('Location: index.php');//更新後、bbs.phpに戻る
+   header('Location: index.php');//更新ボタンを押したときにupdate文を実行後、bbs.phpに戻る
 
 
 
