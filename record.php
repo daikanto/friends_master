@@ -44,12 +44,19 @@
     $age=$_POST['age'];
     //modifiedのカラムの登録が行われてしまう
     $sql = "INSERT INTO `friends`(`friend_id`, `friend_name`, `area_id`, `gender`, `age`, `created`) VALUES ('null','".$friend_name."','".$area_id."','".$gender."','".$age."',now())";
+    //INSERT INTO `テーブル名`　SET `カラム名`＝値
     //$sql文実行
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
 
     echo $area_id;
     //echo count($area_id);
+
+
+
+    header('Location: index.php');
+    exit();//PHPの言語基盤break みたいなもの(文字を出力できる)
+
     }
 
 

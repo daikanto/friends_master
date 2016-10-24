@@ -1,3 +1,83 @@
+<?php  
+ //1:DBへの接続
+    $dsn='mysql:dbname=myfriends;host=localhost';
+    $user='root';
+    $password='';
+    $dbh = new PDO($dsn, $user, $password);
+    $dbh->query('SET NAMES utf8');
+ //都道府県の選択
+    $sql='SELECT*from `areas` WHERE 1';
+
+    $stmt=$dbh->prepare($sql);
+    $stmt->execute();
+
+    //$recordデータ格納用の配列
+    $areas = array();
+
+
+    //3:取得したareaテーブルの情報を表示
+    while (1) {
+        //$
+        $record=$stmt->fetch(PDO::FETCH_ASSOC);
+        if ($record==false){
+            break;
+        }
+        $areas[]=$record;
+        //echo $record['area_name'];
+        //echo '<br>';
+    }
+
+
+ //2:editボタンをおしたときにDBから取り出す
+    if(!empty($_GET)&&($_GET['action']=='edit'))
+    {
+    $sql='SELECT*from `friends` where `friend_id`='.$_GET['id'];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+
+    //$recordデータ格納用の配列
+    $friend=array();
+
+
+//3:取得したareaテーブルの情報を表示
+    $friend=$stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    }
+//4 更新ボタンを押したときにupdate文を実行
+    if(!empty($_POST))
+    {
+    //各更新データを代入
+    $friend_name=$_POST['name'];
+    $area_id=$_POST['area_id'];
+    $gender=$_POST['gender'];
+    $age=$_POST['age'];
+
+    $sql="UPDATE `friends` SET `friend_name`='"."$friend_name"."',`area_id`='"."$area_id"."',`gender`='"."$gender"."',`age`='"."$age"."',`modified`='"."now()"."' WHERE `friend_id`=".$_GET['id'];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+
+
+   header('Location: index.php');//更新後、bbs.phpに戻る
+
+
+
+    }
+    //echo '<br>';
+    //var_dump($friend);
+
+
+
+    
+
+
+ //3:DB登録
+
+    $dbh=null;
+
+?>   
+
+
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -8,11 +88,11 @@
     <title>myFriends</title>
 
     <!-- Bootstrap -->
-    <link href="../assets/css/bootstrap.css" rel="stylesheet">
-    <link href="../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="../assets/css/form.css" rel="stylesheet">
-    <link href="../assets/css/timeline.css" rel="stylesheet">
-    <link href="../assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="assets/css/form.css" rel="stylesheet">
+    <link href="assets/css/timeline.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,21 +133,27 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">名前</label>
               <div class="col-sm-10">
-                <input type="text" name="name" class="form-control" placeholder="山田　太郎" value="山田　太郎">
+                <input type="text" name="name" class="form-control" placeholder="なまえ" value="<?php  echo $friend["friend_name"]; ?>">
               </div>
             </div>
             <!-- 出身 -->
             <div class="form-group">
               <label class="col-sm-2 control-label">出身</label>
               <div class="col-sm-10">
-                <select class="form-control" name="area_id">
-                  <option value="0">出身地を選択</option>
-                  <option value="1" selected>北海道</option>
-                  <option value="2">青森</option>
-                  <option value="3">岩手</option>
-                  <option value="4">宮城</option>
-                  <option value="5">秋田</option>
+                <select class="form-control" name="area_id" name="area_id">
+                    <?php foreach ($areas as $area): 
+                     if ($friend['area_id']==$area['area_id'])
+                      { ?>
+                          <option value="<?php echo $area['area_id']; ?>" selected><?php echo $area['area_name']; ?>  </option>
+                      <?php } 
+
+                     else
+                      { ?> 
+                          <option value="<?php echo $area['area_id']; ?>"><?php echo $area['area_name']; ?></option>
+                      <?php } ?>
+                    <?php endforeach; ?>
                 </select>
+
               </div>
             </div>
             <!-- 性別 -->
@@ -75,9 +161,25 @@
               <label class="col-sm-2 control-label">性別</label>
               <div class="col-sm-10">
                 <select class="form-control" name="gender">
-                  <option value="0">性別を選択</option>
+
+                  <option>性別を選択</option>
+                  <!--if文でselectedをつけるのを選択する
+                  if 男性
+                  else 女性
+
+                  -->
+
+            <?php   
+                  if($friend['gender']==1){ ?>
                   <option value="1" selected>男性</option>
-                  <option value="2">女性</option>
+                  <option value="2" >女性</option>                  
+                  <?php } 
+
+                  elseif($friend['gender']==2) { ?>
+                  <option value="1">男性</option>
+                  <option value="2" selected>女性</option>
+            <?php } ?>
+
                 </select>
               </div>
             </div>
@@ -85,7 +187,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">年齢</label>
               <div class="col-sm-10">
-                <input type="text" name="age" class="form-control" placeholder="例：27" value="27">
+                <input type="text" name="age" class="form-control" placeholder="齢" value="<?php echo $friend["age"];?>">
               </div>
             </div>
 

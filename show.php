@@ -45,7 +45,7 @@
 
 
 
-      //男女の人数をカウント、全体のカウント
+      //男女の人数をカウント、全体のカウント  //while文の中に入れることで処理速度がスムーズになる
       foreach ($friend as $count)
        {
           if ($count['gender']==1) {
@@ -60,25 +60,13 @@
 
     //echo $sum_friend;
 
-    //削除ボタンを押したときのactionの値とidを取得
-    if(!empty($_GET)&&($_GET['action']=='delete'))
-    {
-    //SQL文でDELETEを実行
-    $sql = "DELETE FROM `friends` where `friend_id`=".$_GET['id'];//delete文
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    //index.phpに画面遷移を行う
-   header('Location: index.php');//削除後、bbs.phpに戻る
-
-    
-
-    }
 
     echo '<br>';
     echo '<br>';
     
 
 
+    $dbh=null;
 
 ?>   
 
@@ -149,10 +137,10 @@
               <td><div class="text-center"><?php echo $friend_list['friend_name']; ?></div></td>
               <td>
                 <div class="text-center">
-                  <a href="edit.php"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <a href="edit.php?id=<?php echo $friend_list['friend_id'];?>&action=edit"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                   <!--href="javascript:void(0);ってなんぞや-->
                   <!--idを削除ボタンを押したときに値を送信 OK-->
-                  <a href="show.php?id=<?php echo $friend_list['friend_id'];?>&action=delete" onclick="destroy();"><i class="fa fa-trash"></i></a>
+                  <a href="delete.php?id=<?php echo $friend_list['friend_id'];?>&action=delete" onclick="destroy();"><i class="fa fa-trash"></i></a>
                 </div>
               </td>
             </tr>
@@ -160,7 +148,7 @@
             
           </tbody>
         </table>
-        <input type="button" class="btn btn-default" value="新規作成" onClick="location.href='new.php'">
+        <input type="button" class="btn btn-default" value="新規作成" onClick="location.href='record.php'">
       </div>
     </div>
   </div>
