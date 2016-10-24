@@ -47,18 +47,17 @@
 //4 更新ボタンを押したときにupdate文を実行
     if(!empty($_POST))
     {
-    //各更新データを代入
-    $friend_name=$_POST['name'];
-    $area_id=$_POST['area_id'];
-    $gender=$_POST['gender'];
-    $age=$_POST['age'];
+        //各更新データを代入
+        $friend_name=$_POST['name'];
+        $area_id=$_POST['area_id'];
+        $gender=$_POST['gender'];
+        $age=$_POST['age'];
 
-    $sql="UPDATE `friends` SET `friend_name`='"."$friend_name"."',`area_id`='"."$area_id"."',`gender`='"."$gender"."',`age`='"."$age"."',`modified`='"."now()"."' WHERE `friend_id`=".$_GET['id'];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
+        $sql="UPDATE `friends` SET `friend_name`='"."$friend_name"."',`area_id`='"."$area_id"."',`gender`='"."$gender"."',`age`='"."$age"."',`modified`='"."now()"."' WHERE `friend_id`=".$_GET['id'];
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
 
-
-   header('Location: index.php');//更新ボタンを押したときにupdate文を実行後、bbs.phpに戻る
+        header('Location: index.php');//更新ボタンを押したときにupdate文を実行後、bbs.phpに戻る
 
 
 
