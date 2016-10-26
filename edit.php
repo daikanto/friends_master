@@ -34,7 +34,7 @@
     $sql='SELECT*from `friends` where `friend_id`='.$_GET['id'];
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
-
+    
     //$recordデータ格納用の配列
     $friend=array();
 
@@ -52,13 +52,16 @@
         $area_id=$_POST['area_id'];
         $gender=$_POST['gender'];
         $age=$_POST['age'];
+        $friend_id=$_GET['id'];
+
+        //echo $friend_id;
 
         $sql="UPDATE `friends` SET `friend_name`='"."$friend_name"."',`area_id`='"."$area_id"."',`gender`='"."$gender"."',`age`='"."$age"."',`modified`='"."now()"."' WHERE `friend_id`=".$_GET['id'];
         $stmt = $dbh->prepare($sql);
         $stmt->execute();
 
         header('Location: index.php');//更新ボタンを押したときにupdate文を実行後、bbs.phpに戻る
-
+        exit();
 
 
     }
@@ -127,7 +130,8 @@
     <div class="row">
       <div class="col-md-4 content-margin-top">
         <legend>友達の編集</legend>
-        <form method="post" action="" class="form-horizontal" role="form">
+        <!--<form method="post" action="edit.php?friend_id=<?php echo $friend_id; ?>" class="form-horizontal" role="form">-->
+      <form method="post" action="" class="form-horizontal" role="form">
             <!-- 名前 -->
             <div class="form-group">
               <label class="col-sm-2 control-label">名前</label>

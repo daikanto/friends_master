@@ -49,7 +49,7 @@
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
 
-    echo $area_id;
+    //echo $area_id;
     //echo count($area_id);
 
 

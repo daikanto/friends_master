@@ -10,7 +10,7 @@
 	    $sql="SELECT COUNT(`friend_id`) FROM `friends` WHERE `area_id`=1";
 	    $stmt=$dbh->prepare($sql);
 	    $stmt->execute();
-
+	    
 	    
         $record=$stmt->fetch(PDO::FETCH_ASSOC);
         $count[]=$record;

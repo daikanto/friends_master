@@ -7,7 +7,8 @@
     $dbh->query('SET NAMES utf8');
     //2:DBからareaテーブルの情報を表示
     //DB名、テーブル名、カラム名はアクサングラーブで囲む：省略可
-    $sql='SELECT*from `areas` WHERE 1';
+    //$sql='SELECT*from `areas` WHERE 1';
+    $sql='SELECT `areas`.`area_id`, `areas`.`area_name`, COUNT(`friends`.`friend_id`) AS friends_cnt FROM `areas` LEFT JOIN `friends` ON `areas`.`area_id` = `friends`.`area_id` GROUP BY `areas`.`area_id`, `areas`.`area_name` ORDER BY `areas`.`area_id`';
 
     $stmt=$dbh->prepare($sql);
     $stmt->execute();
@@ -32,6 +33,20 @@
     echo '<br>';
     echo '<br>';
     //echo count($areas);
+    //$sql='SELECT COUNT(`friend_id`) FROM `friends` WHERE `area_id` = 1';
+   //  $sql='SELECT COUNT(`friend_id`) AS friends_cnt FROM `friends` WHERE `area_id` = 1';
+   //  $stmt=$dbh->prepare($sql);
+   //  $stmt->execute();
+
+   //  $rd=$stmt->fetch(PDO::FETCH_ASSOC);
+   //  var_dump($rd);
+   //  echo '<br>';
+   //  echo '<br>';
+   //  echo '<br>';
+   // // echo $rd["COUNT(`friend_id`)"];
+   //  echo $rd["friends_cnt"];
+
+
 
     $dbh=null;
  ?>
@@ -111,7 +126,7 @@
                 </div>
               </td>
               <td>
-                <div class="text-center">3</div>
+                <div class="text-center"><?php echo $area['friends_cnt'] ?></div>
               </td>
             </tr>
             <?php endforeach; ?>
