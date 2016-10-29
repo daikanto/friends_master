@@ -2,7 +2,7 @@
  //1:DBへの接続
     $dsn='mysql:dbname=myfriends;host=localhost';
     $user='root';
-    $password='';
+    $password='mysql';
     $dbh = new PDO($dsn, $user, $password);
     $dbh->query('SET NAMES utf8');
     //2:DBからareaテーブルの情報をarea_idを利用してレコードを取得
@@ -140,7 +140,7 @@
                   <a href="edit.php?id=<?php echo $friend_list['friend_id'];?>&action=edit"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                   <!--href="javascript:void(0);ってなんぞや-->
                   <!--idを削除ボタンを押したときに値を送信 OK-->
-                  <a href="delete.php?id=<?php echo $friend_list['friend_id'];?>&action=delete" onclick="destroy();"><i class="fa fa-trash"></i></a>
+                  <a href="delete.php?id=<?php echo $friend_list['friend_id'];?>&action=delete" onclick="destroy(<?php echo $friend_list['friend_id'] ?>);"><i class="fa fa-trash"></i></a>
                 </div>
               </td>
             </tr>
@@ -156,5 +156,27 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script>
+      //javascriptコード
+      //javascriptとは、ブラウザ上で実行されるスクリプト言語
+     function destroy(friend_id){//自作関数（組み込み関数）
+       //alert('ほげ');//ポップアップでメッセージを表示する
+
+       var del = comfirm('削除しますか?');//OKを押すとtrueを返し、canselを押すとfalseを返す
+
+
+       if(del==true){
+          //OKの処理
+          //ｐｈｐでいううところのheaderと同じ
+          location.href='delete.php?action=delete&id='+ friend_id;
+          return true;
+       }else{
+          //cancelの処理
+          return false;
+       }
+
+     }
+
+    </script>
   </body>
 </html>
